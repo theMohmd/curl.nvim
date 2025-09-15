@@ -3,7 +3,7 @@ local M = {}
 OUTPUT_BUF_ID = -1
 COMMAND_BUF_ID = -1
 TAB_ID = "curl.nvim.tab"
-RESULT_BUF_NAME = "Curl output"
+RESULT_BUF_NAME = "/tmp/curl-output"
 
 local buf_is_open = function(buffer_name)
 	local bufnr = vim.fn.bufnr(buffer_name, false)
@@ -106,10 +106,12 @@ local open_result_buffer = function(called_from_win_id)
 		return
 	end
 
+  local tmpfile = "/tmp/curl.json"
+
 	local new_bufnr = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_name(new_bufnr, open_resbuf_name)
 	vim.api.nvim_set_option_value("filetype", "json", { buf = new_bufnr })
-	vim.api.nvim_set_option_value("buftype", "nofile", { buf = new_bufnr })
+	vim.api.nvim_set_option_value("buftype", "", { buf = new_bufnr })
 	vim.cmd(split_cmd .. new_bufnr .. " | wincmd p")
 	OUTPUT_BUF_ID = new_bufnr
 end
